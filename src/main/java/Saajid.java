@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Saajid {
     private static final String NAME = "Saajid";
     private static final String HORIZONTAL_LINE = "_".repeat(60);
@@ -13,9 +15,24 @@ public class Saajid {
         System.out.println("Bye. Hope to see you soon!");
         System.out.println("\n" + Saajid.HORIZONTAL_LINE);
     }
+
+    public void echo(String input) {
+        System.out.println(Saajid.HORIZONTAL_LINE);
+        System.out.println(input);
+        System.out.println("\n" + Saajid.HORIZONTAL_LINE);
+    }
     public static void main(String[] args) {
        Saajid saajid = new Saajid();
        saajid.greeting();
-       saajid.exit();
+       Scanner sc = new Scanner(System.in);
+       while (true) {
+           String input = sc.nextLine().trim();
+           if (input.equalsIgnoreCase("bye")) {
+               saajid.exit();
+               break;
+           } else {
+               saajid.echo(input);
+           }
+       }
     }
 }
