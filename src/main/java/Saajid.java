@@ -1,10 +1,9 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Saajid {
     private static final String NAME = "Saajid";
-    private static final int MAX_TASKS = 100;
-    private Task[] tasks = new Task[Saajid.MAX_TASKS];
-    private int taskCount = 0;
+    private ArrayList<Task> tasks = new ArrayList<>();
     private static final String HORIZONTAL_LINE = "_".repeat(60);
 
     public void greeting() {
@@ -26,12 +25,27 @@ public class Saajid {
     }
 
     private void addTask(Task t) {
-        this.tasks[this.taskCount] = t;
-        this.taskCount++;
+        tasks.add(t);
         System.out.println(Saajid.HORIZONTAL_LINE);
         System.out.println("Got it. I've added this task:");
         System.out.println("   " + t);
-        System.out.println("Now you have " + this.taskCount + " tasks in the list.");
+        System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
+        System.out.println("\n" + Saajid.HORIZONTAL_LINE);
+    }
+
+    private void deleteTask(String input) throws SaajidException {
+        if (input.length() <= 7) {
+            throw new SaajidException("Please provide a task number to delete!");
+        }
+        int index = Integer.parseInt(input.substring(7).trim()) - 1;
+        if (index < 0 || index >= this.tasks.size()) {
+            throw new SaajidException("Task number " + (index+1) + " does not exist.");
+        }
+        Task removed = this.tasks.remove(index);
+        System.out.println(Saajid.HORIZONTAL_LINE);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("   " + removed);
+        System.out.println("Now you have " + this.tasks.size() + " tasks in the list.");
         System.out.println("\n" + Saajid.HORIZONTAL_LINE);
     }
 
@@ -48,8 +62,8 @@ public class Saajid {
                } else if (input.equalsIgnoreCase("list")) {
                    System.out.println(Saajid.HORIZONTAL_LINE);
                    System.out.println("Here are the tasks in your list:");
-                   for (int i = 1; i <= saajid.taskCount; i++) {
-                       System.out.println(i + "." + saajid.tasks[i - 1]);
+                   for (int i = 1; i <= saajid.tasks.size(); i++) {
+                       System.out.println(i + "." + saajid.tasks.get(i - 1));
                    }
                    System.out.println("\n" + Saajid.HORIZONTAL_LINE);
                } else if (input.startsWith("mark")) {
@@ -57,11 +71,11 @@ public class Saajid {
                        throw new SaajidException("Please provide a task number!!");
                    }
                    int index = Integer.parseInt(input.substring(5)) - 1;
-                   if (index >= 0 && index < saajid.taskCount) {
-                       saajid.tasks[index].markAsDone();
+                   if (index >= 0 && index < saajid.tasks.size()) {
+                       saajid.tasks.get(index).markAsDone();
                        System.out.println(Saajid.HORIZONTAL_LINE);
                        System.out.println("Nice! I've marked this task as done:");
-                       System.out.println("  " + saajid.tasks[index]);
+                       System.out.println("  " + saajid.tasks.get(index));
                        System.out.println("\n" + Saajid.HORIZONTAL_LINE);
                    } else {
                        throw new SaajidException("Task number " + (index+1) + " does not exist.");
@@ -71,11 +85,11 @@ public class Saajid {
                        throw new SaajidException("Please provide a task number!!");
                    }
                    int index = Integer.parseInt(input.substring(7)) - 1;
-                   if (index >= 0 && index < saajid.taskCount) {
-                       saajid.tasks[index].markAsNotDone();
+                   if (index >= 0 && index < saajid.tasks.size()) {
+                       saajid.tasks.get(index).markAsNotDone();
                        System.out.println(Saajid.HORIZONTAL_LINE);
                        System.out.println("OK, I've marked this task as not done yet:");
-                       System.out.println("  " + saajid.tasks[index]);
+                       System.out.println("  " + saajid.tasks.get(index));
                        System.out.println("\n" + Saajid.HORIZONTAL_LINE);
                    } else {
                        throw new SaajidException("Task number " + (index+1) + " does not exist.");
@@ -107,6 +121,8 @@ public class Saajid {
                    }
                    Task task = new Event(parts[0], parts[1], parts[2]);
                    saajid.addTask(task);
+               } else if (input.startsWith("delete")) {
+                   saajid.deleteTask(input);
                } else {
                    throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
                }
