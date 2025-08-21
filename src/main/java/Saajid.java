@@ -2,6 +2,9 @@ import java.util.Scanner;
 
 public class Saajid {
     private static final String NAME = "Saajid";
+    private static final int MAX_TASKS = 100;
+    private String[] tasks = new String[Saajid.MAX_TASKS];
+    private int taskCount = 0;
     private static final String HORIZONTAL_LINE = "_".repeat(60);
 
     public void greeting() {
@@ -30,8 +33,18 @@ public class Saajid {
            if (input.equalsIgnoreCase("bye")) {
                saajid.exit();
                break;
+           } else if (input.equalsIgnoreCase("list")) {
+               System.out.println(Saajid.HORIZONTAL_LINE);
+               for (int i = 1; i <= saajid.taskCount; i++) {
+                   System.out.println(i + ". " + saajid.tasks[i - 1]);
+               }
+               System.out.println("\n" + Saajid.HORIZONTAL_LINE);
            } else {
-               saajid.echo(input);
+               saajid.tasks[saajid.taskCount] = input;
+               saajid.taskCount++;
+               System.out.println(Saajid.HORIZONTAL_LINE);
+               System.out.println("added: " + input);
+               System.out.println("\n" + Saajid.HORIZONTAL_LINE);
            }
        }
     }
