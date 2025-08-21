@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Saajid {
     private static final String NAME = "Saajid";
     private static final int MAX_TASKS = 100;
-    private String[] tasks = new String[Saajid.MAX_TASKS];
+    private Task[] tasks = new Task[Saajid.MAX_TASKS];
     private int taskCount = 0;
     private static final String HORIZONTAL_LINE = "_".repeat(60);
 
@@ -35,12 +35,31 @@ public class Saajid {
                break;
            } else if (input.equalsIgnoreCase("list")) {
                System.out.println(Saajid.HORIZONTAL_LINE);
+               System.out.println("Here are the tasks in your list:");
                for (int i = 1; i <= saajid.taskCount; i++) {
                    System.out.println(i + ". " + saajid.tasks[i - 1]);
                }
                System.out.println("\n" + Saajid.HORIZONTAL_LINE);
+           } else if (input.startsWith("mark")) {
+               int index = Integer.parseInt(input.substring(5)) - 1;
+               if (index >= 0 && index < saajid.taskCount) {
+                   saajid.tasks[index].markAsDone();
+                   System.out.println(Saajid.HORIZONTAL_LINE);
+                   System.out.println("Nice! I've marked this task as done:");
+                   System.out.println("  " + saajid.tasks[index]);
+                   System.out.println("\n" + Saajid.HORIZONTAL_LINE);
+               }
+           } else if (input.startsWith("unmark")) {
+               int index = Integer.parseInt(input.substring(7)) - 1;
+               if (index >= 0 && index < saajid.taskCount) {
+                   saajid.tasks[index].markAsNotDone();
+                   System.out.println(Saajid.HORIZONTAL_LINE);
+                   System.out.println("OK, I've marked this task as not done yet:");
+                   System.out.println("  " + saajid.tasks[index]);
+                   System.out.println("\n" + Saajid.HORIZONTAL_LINE);
+               }
            } else {
-               saajid.tasks[saajid.taskCount] = input;
+               saajid.tasks[saajid.taskCount] = new Task(input);
                saajid.taskCount++;
                System.out.println(Saajid.HORIZONTAL_LINE);
                System.out.println("added: " + input);
