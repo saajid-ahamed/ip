@@ -32,7 +32,7 @@ public class Saajid {
         System.out.println("Got it. I've added this task:");
         System.out.println("   " + t);
         System.out.println("Now you have " + this.taskCount + " tasks in the list.");
-        System.out.println(Saajid.HORIZONTAL_LINE);
+        System.out.println("\n" + Saajid.HORIZONTAL_LINE);
     }
 
     public static void main(String[] args) {
