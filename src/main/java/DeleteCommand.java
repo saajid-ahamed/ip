@@ -9,4 +9,6 @@ public class DeleteCommand extends Command {
     public void execute(TaskList tasks, Ui ui) throws SaajidException {
         tasks.deleteTask(index, ui);
     }
+
+    //deleteTask will handle the message printing
 }

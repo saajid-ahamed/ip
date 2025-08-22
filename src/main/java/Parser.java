@@ -1,8 +1,15 @@
+/**
+ * Parses user input strings and converts them into Command objects.
+ * Responsible for identifying the command keyword and extracting
+ * any required arguments before returning the appropriate command.
+ * acheived through splitting the input and checking if proper inputs are present.
+ * Throws SaajidException for invalid or incomplete inputs.
+ */
 public class Parser {
 
     public Command parse(String input) throws SaajidException {
-        String[] words = input.split(" ", 2);
-        String commandWord = words[0];
+        String[] words = input.split(" ", 2); //split the input string into 2 part if any
+        String commandWord = words[0]; //first word determines command type
 
         if (commandWord.equalsIgnoreCase("bye")) {
             return new ExitCommand();
@@ -13,16 +20,25 @@ public class Parser {
                 throw new SaajidException("Please provide a task number to delete!");
             }
             return new DeleteCommand(Integer.parseInt(words[1]) - 1);
+
+
+
         } else if (commandWord.equalsIgnoreCase("mark")) {
             if (words.length < 2) {
                 throw new SaajidException("Please provide a task number to mark!");
             }
             return new MarkCommand(Integer.parseInt(words[1]) - 1);
+
+            // marking of task handled elsewhere
+
         } else if (commandWord.equalsIgnoreCase("unmark")) {
             if (words.length < 2) {
                 throw new SaajidException("Please provide a task number to unmark!");
             }
             return new UnmarkCommand(Integer.parseInt(words[1]) - 1);
+
+            // the unmarking of a task handled elsewhere
+
         } else if (commandWord.equalsIgnoreCase("todo")) {
             if (words.length < 2 || words[1].trim().isEmpty()) {
                 throw new SaajidException("The todo command must include a description.");
@@ -50,8 +66,14 @@ public class Parser {
                 throw new SaajidException("The event command must include a description, /from, and /to times.");
             }
             return new AddCommand(new Event(eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim()));
+
+            //figure out the type of task to be added, split the String accordingly
+            //figure out if any parts of the required string is missing
+
         } else {
             throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
+
+            //unknown command
         }
     }
 }

@@ -6,6 +6,7 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    //add task will handle the printing of message
     @Override
     public void execute(TaskList tasks, Ui ui) {
         tasks.addTask(task, ui);
