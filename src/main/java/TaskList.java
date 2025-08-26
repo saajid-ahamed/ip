@@ -7,6 +7,12 @@ public class TaskList {
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    public TaskList() {}
+
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks.addAll(tasks);
+    }
+
 /**
  * Adds a task to the list and shows a confirmation message.
  */
@@ -47,5 +53,9 @@ public class TaskList {
     //function to check the size of the arraylist
     public int size() {
         return this.tasks.size();
+    }
+
+    public ArrayList<Task> getTasks() {
+        return this.tasks;
     }
 }

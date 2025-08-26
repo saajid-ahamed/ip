@@ -1,0 +1,3 @@
+T | 0 | something
+D | 0 | this | Sunday
+E | 0 | that | August | september
