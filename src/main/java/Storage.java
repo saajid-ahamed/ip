@@ -2,6 +2,8 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Storage {
     private final Path filePath;
@@ -63,10 +65,13 @@ public class Storage {
                     t = new Todo(desc);
                     break;
                 case "D":
-                    t = new Deadline(desc, parts[3].trim());
+                    LocalDateTime by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    t = new Deadline(desc, by);
                     break;
                 case "E":
-                    t = new Event(desc, parts[3].trim(), parts[4].trim()); // store full time string
+                    LocalDateTime from = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    LocalDateTime to = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    t = new Event(desc, from, to);
                     break;
                 default:
                     return null; // corrupted line
@@ -84,11 +89,11 @@ public class Storage {
             return "T | " + (t.isDone ? "1" : "0") + " | " + t.description;
         } else if (t instanceof Deadline) {
             return "D | " + (t.isDone ? "1" : "0") + " | " + t.description
-                    + " | " + ((Deadline) t).getBy();
+                    + " | " + ((Deadline) t).getBy().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
         } else if (t instanceof Event) {
             return "E | " + (t.isDone ? "1" : "0") + " | " + t.description
-                    + " | " + ((Event) t).getFrom()
-                    + " | " + ((Event) t).getTo();
+                    + " | " + ((Event) t).getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
+                    + " | " + ((Event) t).getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
         }
         return "";
     }

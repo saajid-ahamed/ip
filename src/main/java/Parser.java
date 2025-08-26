@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 /**
  * Parses user input strings and converts them into Command objects.
  * Responsible for identifying the command keyword and extracting
@@ -46,26 +48,39 @@ public class Parser {
             return new AddCommand(new Todo(words[1].trim()));
         } else if (commandWord.equalsIgnoreCase("deadline")) {
             if (words.length < 2 || !words[1].contains("/by")) {
-                throw new SaajidException("The deadline command must include a description and a /by time.");
+                throw new SaajidException("The deadline command must include a description and a /by date-time.");
             }
-            String[] deadlineParts = words[1].split("/by", 2);
-            if (deadlineParts[0].trim().isEmpty() || deadlineParts[1].trim().isEmpty()) {
-                throw new SaajidException("The deadline command must include a description and a /by time.");
+            String[] parts = words[1].split("/by", 2);
+            String desc = parts[0].trim();
+            String dateTimeStr = parts[1].trim();
+
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
+                return new AddCommand(new Deadline(desc, by));
+            } catch (Exception e) {
+                throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format, e.g., 2019-12-02 1800");
             }
-            return new AddCommand(new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim()));
         } else if (commandWord.equalsIgnoreCase("event")) {
             if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
-                throw new SaajidException("The event command must include a description, /from, and /to times.");
+                throw new SaajidException("The event command must include a description, /from and /to date-times.");
             }
-            String[] eventParts = words[1].split("/from", 2);
-            if (eventParts[0].trim().isEmpty()) {
-                throw new SaajidException("The event command must include a description, /from, and /to times.");
+
+            String[] parts = words[1].split("/from", 2);
+            String desc = parts[0].trim();
+
+            String[] timeParts = parts[1].split("/to", 2);
+            String fromStr = timeParts[0].trim();
+            String toStr = timeParts[1].trim();
+
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                LocalDateTime from = LocalDateTime.parse(fromStr, formatter);
+                LocalDateTime to = LocalDateTime.parse(toStr, formatter);
+                return new AddCommand(new Event(desc, from, to));
+            } catch (Exception e) {
+                throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format, e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
             }
-            String[] timeParts = eventParts[1].split("/to", 2);
-            if (timeParts.length < 2 || timeParts[0].trim().isEmpty() || timeParts[1].trim().isEmpty()) {
-                throw new SaajidException("The event command must include a description, /from, and /to times.");
-            }
-            return new AddCommand(new Event(eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim()));
 
             //figure out the type of task to be added, split the String accordingly
             //figure out if any parts of the required string is missing
