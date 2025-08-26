@@ -5,11 +5,21 @@ public class Saajid {
     private final Ui ui;
     private final TaskList tasks;
     private final Parser parser;
+    private final Storage storage;
 
     public Saajid() {
         this.ui = new Ui();
-        this.tasks = new TaskList();
         this.parser = new Parser();
+        this.storage = new Storage("./data/saajid.txt");
+
+        TaskList loaded;
+        try {
+            loaded = new TaskList(storage.load());
+        } catch (SaajidException e) {
+            ui.showError("Error loading tasks: " + e.getMessage());
+            loaded = new TaskList();
+        }
+        this.tasks = loaded;
     }
     /**
      * Runs the main command loop of the application.
@@ -27,7 +37,8 @@ public class Saajid {
             String input = ui.nextCommand();
             try {
                 Command command = parser.parse(input); // Parse into command
-                command.execute(tasks, ui);  // Execute command
+                command.execute(tasks, ui);
+                storage.save(tasks.getTasks()); // Execute command
                 isExit = command.isExit();   // Check if exit
             } catch (SaajidException e) {
                 ui.showError(e.getMessage());
