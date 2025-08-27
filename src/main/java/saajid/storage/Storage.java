@@ -1,3 +1,12 @@
+package saajid.storage;
+
+import saajid.exception.SaajidException;
+
+import saajid.task.Deadline;
+import saajid.task.Event;
+import saajid.task.Task;
+import saajid.task.Todo;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -51,7 +60,7 @@ public class Storage {
         }
     }
 
-    /** Parse a line into a Task object. */
+    /** Parse a line into a saajid.task.Task object. */
     private Task parseTask(String line) {
         try {
             String[] parts = line.split("\\|");
@@ -83,15 +92,15 @@ public class Storage {
         }
     }
 
-    /** Convert a Task into a saveable string. */
+    /** Convert a saajid.task.Task into a saveable string. */
     private String formatTask(Task t) {
         if (t instanceof Todo) {
-            return "T | " + (t.isDone ? "1" : "0") + " | " + t.description;
+            return "T | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription();
         } else if (t instanceof Deadline) {
-            return "D | " + (t.isDone ? "1" : "0") + " | " + t.description
+            return "D | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
                     + " | " + ((Deadline) t).getBy().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
         } else if (t instanceof Event) {
-            return "E | " + (t.isDone ? "1" : "0") + " | " + t.description
+            return "E | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
                     + " | " + ((Event) t).getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
                     + " | " + ((Event) t).getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
         }

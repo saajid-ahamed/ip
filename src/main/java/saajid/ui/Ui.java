@@ -1,3 +1,5 @@
+package saajid.ui;
+
 import java.util.Scanner;
 /**
  * Handles all user interactions including displaying messages,

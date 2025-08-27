@@ -1,3 +1,18 @@
+package saajid.command;
+
+import saajid.exception.SaajidException;
+
+import saajid.task.Task;
+import saajid.task.TaskList;
+
+
+import saajid.storage.Storage;
+
+import saajid.ui.Ui;
+
+
+
+
 public class MarkCommand extends Command {
     private final int index;
 
@@ -9,7 +24,7 @@ public class MarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui) throws SaajidException {
         if (index < 0 || index >= tasks.size()) {
-            throw new SaajidException("Task number " + (index + 1) + " does not exist.");
+            throw new SaajidException("saajid.task.Task number " + (index + 1) + " does not exist.");
         }
         Task t = tasks.getTask(index);
         t.markAsDone();

@@ -1,11 +1,27 @@
+package saajid.parser;
+
+import saajid.exception.SaajidException;
+
+import saajid.command.AddCommand;
+import saajid.command.Command;
+import saajid.command.DeleteCommand;
+import saajid.command.ExitCommand;
+import saajid.command.ListCommand;
+import saajid.command.MarkCommand;
+import saajid.command.UnmarkCommand;
+
+import saajid.task.Deadline;
+import saajid.task.Event;
+import saajid.task.Todo;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 /**
- * Parses user input strings and converts them into Command objects.
+ * Parses user input strings and converts them into saajid.command.Command objects.
  * Responsible for identifying the command keyword and extracting
  * any required arguments before returning the appropriate command.
  * acheived through splitting the input and checking if proper inputs are present.
- * Throws SaajidException for invalid or incomplete inputs.
+ * Throws saajid.exception.SaajidException for invalid or incomplete inputs.
  */
 public class Parser {
 

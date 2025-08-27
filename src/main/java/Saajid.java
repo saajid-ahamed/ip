@@ -1,5 +1,14 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import saajid.command.Command;
+
+import saajid.exception.SaajidException;
+
+import saajid.parser.Parser;
+
+import saajid.storage.Storage;
+
+import saajid.task.TaskList;
+
+import saajid.ui.Ui;
 // More oop already implemented
 
 public class Saajid {
@@ -27,7 +36,7 @@ public class Saajid {
      * <p>
      * The loop continues until the user enters a command
      * that signals program termination (e.g., "bye").
-     * Each user input is parsed into a Command object
+     * Each user input is parsed into a saajid.command.Command object
      * which is then executed.
      * </p>
      */

@@ -1,3 +1,16 @@
+package saajid.command;
+
+import saajid.exception.SaajidException;
+
+import saajid.task.Task;
+import saajid.task.TaskList;
+
+import saajid.storage.Storage;
+
+import saajid.ui.Ui;
+
+
+
 public class UnmarkCommand extends Command {
     private final int index;
 
@@ -8,7 +21,7 @@ public class UnmarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui) throws SaajidException {
         if (index < 0 || index >= tasks.size()) {   //check if number entered is valid
-            throw new SaajidException("Task number " + (index + 1) + " does not exist.");
+            throw new SaajidException("saajid.task.Task number " + (index + 1) + " does not exist.");
         }
         Task t = tasks.getTask(index);
         t.markAsNotDone();
