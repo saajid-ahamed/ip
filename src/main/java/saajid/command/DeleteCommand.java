@@ -23,5 +23,9 @@ public class DeleteCommand extends Command {
         tasks.deleteTask(index, ui);
     }
 
+    public int getIndex() {
+        return this.index;
+    }
+
     //deleteTask will handle the message printing
 }

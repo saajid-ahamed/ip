@@ -30,4 +30,8 @@ public class MarkCommand extends Command {
         t.markAsDone();
         ui.showMessage("Nice! I've marked this task as done:\n  " + t); //print message accordingly
     }
+
+    public int getIndex() {
+        return this.index;
+    }
 }

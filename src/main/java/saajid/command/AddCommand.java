@@ -22,4 +22,8 @@ public class AddCommand extends Command {
     public void execute(TaskList tasks, Ui ui) {
         tasks.addTask(task, ui);
     }
+
+    public Task getTask() {
+        return this.task;
+    }
 }

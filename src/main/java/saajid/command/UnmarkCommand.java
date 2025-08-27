@@ -28,4 +28,8 @@ public class UnmarkCommand extends Command {
         ui.showMessage("OK, I've marked this task as not done yet:\n  " + t);
     }
 
+    public int getIndex() {
+        return this.index;
+    }
+
 }
