@@ -3,10 +3,14 @@ package saajid.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents an event task with a start and end time.
+ */
 public class Event extends Task {
     private LocalDateTime from;
     private LocalDateTime to;
 
+    /** Constructs an Event with description, start and end time. */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;

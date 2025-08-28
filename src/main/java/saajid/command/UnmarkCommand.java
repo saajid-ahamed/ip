@@ -10,17 +10,31 @@ import saajid.storage.Storage;
 import saajid.ui.Ui;
 
 
-
+/**
+ * Represents a command to unmark a task as not done.
+ */
 public class UnmarkCommand extends Command {
     private final int index;
 
+    /**
+     * Constructs an UnmarkCommand for the specified task index.
+     *
+     * @param index The 0-based index of the task to unmark.
+     */
     public UnmarkCommand(int index) {
         this.index = index;
     }
 
+    /**
+     * Marks the specified task as not done.
+     *
+     * @param tasks The task list.
+     * @param ui The UI used for displaying messages.
+     * @throws SaajidException If the index is invalid.
+     */
     @Override
     public void execute(TaskList tasks, Ui ui) throws SaajidException {
-        if (index < 0 || index >= tasks.size()) {   //check if number entered is valid
+        if (index < 0 || index >= tasks.size()) {
             throw new SaajidException("Task number " + (index + 1) + " does not exist.");
         }
         Task t = tasks.getTask(index);

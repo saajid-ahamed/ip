@@ -9,14 +9,17 @@ import saajid.parser.Parser;
 import saajid.storage.Storage;
 
 import saajid.task.TaskList;
-// More oop already implemented
 
+/**
+ * Entry point for the Saajid chatbot application.
+ */
 public class Saajid {
     private final Ui ui;
     private final TaskList tasks;
     private final Parser parser;
     private final Storage storage;
 
+    /** Constructs a Saajid chatbot instance. */
     public Saajid() {
         this.ui = new Ui();
         this.parser = new Parser();
@@ -33,12 +36,10 @@ public class Saajid {
     }
     /**
      * Runs the main command loop of the application.
-     * <p>
      * The loop continues until the user enters a command
      * that signals program termination (e.g., "bye").
      * Each user input is parsed into a saajid.command.Command object
      * which is then executed.
-     * </p>
      */
     public void run() {
         ui.greeting();
@@ -56,6 +57,7 @@ public class Saajid {
         }
     }
 
+    /** Main method to start the application. */
     public static void main(String[] args) {
         new Saajid().run();
     }

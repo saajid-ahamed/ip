@@ -13,15 +13,17 @@ public class TaskList {
 
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /** Constructs an empty task list. */
     public TaskList() {}
 
+    /** Constructs a TaskList initialized with existing tasks. */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks.addAll(tasks);
     }
 
-/**
- * Adds a task to the list and shows a confirmation message.
- */
+    /**
+    * Adds a task to the list and shows a confirmation message.
+    */
     public void addTask(Task t, Ui ui) {
         this.tasks.add(t);
         ui.showMessage("Got it. I've added this task:\n  " + t
@@ -50,13 +52,11 @@ public class TaskList {
         }
         ui.showMessage(sb.toString().trim());
     }
-
-    /* retrieve a particular task at a particular index */
+    /** Returns the task at the given index. */
     public Task getTask(int index) {
         return this.tasks.get(index);
     }
-
-    //function to check the size of the arraylist
+    /** Returns the number of tasks. */
     public int size() {
         return this.tasks.size();
     }

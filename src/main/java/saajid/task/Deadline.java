@@ -3,9 +3,13 @@ package saajid.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a deadline task with a specific due date/time.
+ */
 public class Deadline extends Task {
     private LocalDateTime by;
 
+    /** Constructs a Deadline with description and due date/time. */
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;

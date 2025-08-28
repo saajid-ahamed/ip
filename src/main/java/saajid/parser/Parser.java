@@ -16,15 +16,19 @@ import saajid.task.Todo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 /**
- * Parses user input strings and converts them into saajid.command.Command objects.
- * Responsible for identifying the command keyword and extracting
- * any required arguments before returning the appropriate command.
- * acheived through splitting the input and checking if proper inputs are present.
- * Throws saajid.exception.SaajidException for invalid or incomplete inputs.
+ * Parses user input strings and converts them into {@link Command} objects.
  */
 public class Parser {
 
+    /**
+     * Parses a given input string into a {@link Command}.
+     *
+     * @param input The full user input string.
+     * @return The corresponding command.
+     * @throws SaajidException If input cannot be parsed into a valid command.
+     */
     public Command parse(String input) throws SaajidException {
         String[] words = input.split(" ", 2); //split the input string into 2 part if any
         String commandWord = words[0]; //first word determines command type

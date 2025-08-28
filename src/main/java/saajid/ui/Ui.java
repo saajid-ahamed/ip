@@ -11,49 +11,46 @@
         private final Scanner scanner;
         private static final String NAME = "Saajid";
 
-        //to allow for a GUI
+        /** Constructs a Ui object for user interaction. */
         public Ui() {
             this.scanner = new Scanner(System.in);
         }
 
-        // function to print standard greeting message when one enters the chatbot
+        /** Displays greeting message with lines. */
         public void greeting() {
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println(String.format("Hello! I'm %s\nWhat can I do for you?", Ui.NAME));
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
 
-        // function to print standard goodbye message when one leaves the chatbot
+        /** Displays exit message with lines. */
         public void exit() {
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println("Bye. Hope to see you soon!");
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
 
-        // provides next command entered by user
+        /** Reads next command input from user and trims. */
         public String nextCommand() {
             return scanner.nextLine().trim();
         }
-
-        // function to print a line of dashes
+        /** Displays a horizontal line. */
         public void showLine() {
             System.out.println(Ui.HORIZONTAL_LINE);
         }
-
-        // print an error message with formatting
+        /** Displays an error message with lines. */
         public void showError(String message) {
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println(message);
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
-
-        // print any message with formatting
+        /** Displays a general message with lines. */
         public void showMessage(String message) {
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println(message);
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
-
+        /** Prints a line of message with no structure. */
         public void printLine(String message) {
             System.out.println(message);
         }
