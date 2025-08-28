@@ -1,10 +1,10 @@
 package saajid.parser;
 
-
 import saajid.command.AddCommand;
 import saajid.command.Command;
 import saajid.command.DeleteCommand;
 import saajid.command.ExitCommand;
+import saajid.command.FindCommand;
 import saajid.command.ListCommand;
 import saajid.command.MarkCommand;
 import saajid.command.UnmarkCommand;
@@ -41,25 +41,16 @@ public class Parser {
                 throw new SaajidException("Please provide a task number to delete!");
             }
             return new DeleteCommand(Integer.parseInt(words[1]) - 1);
-
-
-
         } else if (commandWord.equalsIgnoreCase("mark")) {
             if (words.length < 2) {
                 throw new SaajidException("Please provide a task number to mark!");
             }
             return new MarkCommand(Integer.parseInt(words[1]) - 1);
-
-            // marking of task handled elsewhere
-
         } else if (commandWord.equalsIgnoreCase("unmark")) {
             if (words.length < 2) {
                 throw new SaajidException("Please provide a task number to unmark!");
             }
             return new UnmarkCommand(Integer.parseInt(words[1]) - 1);
-
-            // the unmarking of a task handled elsewhere
-
         } else if (commandWord.equalsIgnoreCase("todo")) {
             if (words.length < 2 || words[1].trim().isEmpty()) {
                 throw new SaajidException("The todo command must include a description.");
@@ -72,7 +63,6 @@ public class Parser {
             String[] parts = words[1].split("/by", 2);
             String desc = parts[0].trim();
             String dateTimeStr = parts[1].trim();
-
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
                 LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
@@ -85,14 +75,12 @@ public class Parser {
             if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
                 throw new SaajidException("The event command must include a description, /from and /to date-times.");
             }
-
             String[] parts = words[1].split("/from", 2);
             String desc = parts[0].trim();
 
             String[] timeParts = parts[1].split("/to", 2);
             String fromStr = timeParts[0].trim();
             String toStr = timeParts[1].trim();
-
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
                 LocalDateTime from = LocalDateTime.parse(fromStr, formatter);
@@ -102,14 +90,13 @@ public class Parser {
                 throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
                         "e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
             }
-
-            //figure out the type of task to be added, split the String accordingly
-            //figure out if any parts of the required string is missing
-
+        } else if (commandWord.equalsIgnoreCase("find")) {
+            if (words.length < 2 || words[1].trim().isEmpty()) {
+                throw new SaajidException("The find command must include a keyword.");
+            }
+            return new FindCommand(words[1].trim());
         } else {
             throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
-
-            //unknown command
         }
     }
 }
