@@ -1,7 +1,6 @@
 package saajid.task;
 
 import saajid.exception.SaajidException;
-
 import saajid.ui.Ui;
 
 import java.util.ArrayList;

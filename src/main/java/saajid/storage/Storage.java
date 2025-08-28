@@ -1,18 +1,22 @@
 package saajid.storage;
 
 import saajid.exception.SaajidException;
-
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Task;
 import saajid.task.Todo;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Handles loading and saving tasks to a file.
@@ -82,12 +86,15 @@ public class Storage {
                     t = new Todo(desc);
                     break;
                 case "D":
-                    LocalDateTime by = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    LocalDateTime by = LocalDateTime.parse(parts[3].trim(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
                     t = new Deadline(desc, by);
                     break;
                 case "E":
-                    LocalDateTime from = LocalDateTime.parse(parts[3].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    LocalDateTime to = LocalDateTime.parse(parts[4].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    LocalDateTime from = LocalDateTime.parse(parts[3].trim(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                    LocalDateTime to = LocalDateTime.parse(parts[4].trim(),
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
                     t = new Event(desc, from, to);
                     break;
                 default:
