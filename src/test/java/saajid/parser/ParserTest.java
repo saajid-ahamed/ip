@@ -2,8 +2,15 @@ package saajid.parser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import saajid.command.*;
+
+import saajid.command.AddCommand;
+import saajid.command.DeleteCommand;
+import saajid.command.ExitCommand;
+import saajid.command.ListCommand;
+import saajid.command.MarkCommand;
+import saajid.command.UnmarkCommand;
 import saajid.exception.SaajidException;
+import saajid.parser.Parser;
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Todo;
@@ -12,6 +19,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class ParserTest {
 

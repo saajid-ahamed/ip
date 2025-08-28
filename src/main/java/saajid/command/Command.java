@@ -1,9 +1,10 @@
 package saajid.command;
 
+import saajid.exception.SaajidException;
+import saajid.storage.Storage;
 import saajid.task.TaskList;
 import saajid.ui.Ui;
-import saajid.storage.Storage;
-import saajid.exception.SaajidException;
+
 
 
 
@@ -17,3 +18,4 @@ public abstract class Command {
         return false;
     }
 }
+

@@ -1,7 +1,6 @@
 package saajid.command;
 
 import saajid.exception.SaajidException;
-
 import saajid.task.Task;
 import saajid.task.TaskList;
 

@@ -1,6 +1,5 @@
 package saajid.parser;
 
-import saajid.exception.SaajidException;
 
 import saajid.command.AddCommand;
 import saajid.command.Command;
@@ -9,7 +8,7 @@ import saajid.command.ExitCommand;
 import saajid.command.ListCommand;
 import saajid.command.MarkCommand;
 import saajid.command.UnmarkCommand;
-
+import saajid.exception.SaajidException;
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Todo;
@@ -75,7 +74,8 @@ public class Parser {
                 LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
                 return new AddCommand(new Deadline(desc, by));
             } catch (Exception e) {
-                throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format, e.g., 2019-12-02 1800");
+                throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format," +
+                        "e.g., 2019-12-02 1800");
             }
         } else if (commandWord.equalsIgnoreCase("event")) {
             if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
@@ -95,7 +95,8 @@ public class Parser {
                 LocalDateTime to = LocalDateTime.parse(toStr, formatter);
                 return new AddCommand(new Event(desc, from, to));
             } catch (Exception e) {
-                throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format, e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
+                throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
+                        "e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
             }
 
             //figure out the type of task to be added, split the String accordingly
