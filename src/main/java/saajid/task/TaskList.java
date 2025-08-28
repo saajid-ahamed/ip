@@ -51,6 +51,26 @@ public class TaskList {
         ui.showMessage(sb.toString().trim());
     }
 
+    /**
+     * Finds and displays all tasks that contain the given keyword.
+     */
+    public void findTasks(String keyword, Ui ui) {
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+        int count = 0;
+        for (int i = 0; i < this.tasks.size(); i++) {
+            Task t = this.tasks.get(i);
+            if (t.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                count++;
+                sb.append(count).append(".").append(t).append("\n");
+            }
+        }
+        if (count == 0) {
+            ui.showMessage("No matching tasks found for keyword: " + keyword);
+        } else {
+            ui.showMessage(sb.toString().trim());
+        }
+    }
+
     /* retrieve a particular task at a particular index */
     public Task getTask(int index) {
         return this.tasks.get(index);

@@ -10,5 +10,5 @@ public class ListCommand extends Command {
     public void execute(TaskList tasks, Ui ui) {
         tasks.listTasks(ui);
     }
-    // listTask function will handle message printing
+        // listTask function will handle message printing
 }
