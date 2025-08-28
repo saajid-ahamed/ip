@@ -14,9 +14,17 @@ import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Handles loading and saving tasks to a file.
+ */
 public class Storage {
     private final Path filePath;
 
+    /**
+     * Constructs a Storage object with the specified file path.
+     *
+     * @param filePath The path of the file to save/load tasks.
+     */
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
     }
@@ -60,7 +68,7 @@ public class Storage {
         }
     }
 
-    /** Parse a line into a saajid.task.Task object. */
+    /** Parse a line into a Task object. */
     private Task parseTask(String line) {
         try {
             String[] parts = line.split("\\|");
@@ -92,7 +100,7 @@ public class Storage {
         }
     }
 
-    /** Convert a saajid.task.Task into a saveable string. */
+    /** Convert a Task into a saveable string. */
     private String formatTask(Task t) {
         if (t instanceof Todo) {
             return "T | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription();
