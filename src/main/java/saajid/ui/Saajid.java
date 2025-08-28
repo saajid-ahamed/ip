@@ -1,3 +1,5 @@
+package saajid.ui;
+
 import saajid.command.Command;
 
 import saajid.exception.SaajidException;
@@ -7,8 +9,6 @@ import saajid.parser.Parser;
 import saajid.storage.Storage;
 
 import saajid.task.TaskList;
-
-import saajid.ui.Ui;
 // More oop already implemented
 
 public class Saajid {
