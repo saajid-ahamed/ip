@@ -53,6 +53,41 @@ public class Saajid {
         }
     }
 
+    public String processInput(String input) {
+        // Temporary Ui that collects messages instead of printing
+        class StringUi extends Ui {
+            private final StringBuilder output = new StringBuilder();
+
+            @Override
+            public void showMessage(String message) {
+                output.append(message).append("\n");
+            }
+
+            @Override
+            public void showError(String message) {
+                output.append(message).append("\n");
+            }
+
+            public String getOutput() {
+                return output.toString().trim();
+            }
+        }
+
+        StringUi stringUi = new StringUi();
+        String result;
+
+        try {
+            Command command = parser.parse(input);
+            command.execute(tasks, stringUi);
+            storage.save(tasks.getTasks());
+            result = stringUi.getOutput();
+        } catch (SaajidException e) {
+            result = e.getMessage();
+        }
+
+        return result;
+    }
+
     /** Main method to start the application. */
     public static void main(String[] args) {
         new Saajid().run();

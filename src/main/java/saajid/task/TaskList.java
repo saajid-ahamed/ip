@@ -34,7 +34,7 @@ public class TaskList {
     */
     public void deleteTask(int index, Ui ui) throws SaajidException {
         if (index < 0 || index >= this.tasks.size()) {
-            throw new SaajidException("saajid.task.Task number " + (index+1) + " does not exist.");
+            throw new SaajidException("Task number " + (index+1) + " does not exist.");
         }
         Task removed = this.tasks.remove(index);
         ui.showMessage("Noted. I've removed this task:\n  " + removed
