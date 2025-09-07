@@ -21,6 +21,11 @@ public class Saajid {
         this.parser = new Parser();
         this.storage = new Storage("./data/saajid.txt");
 
+        //all variables are assumed to not be null
+        assert this.ui != null;
+        assert this.parser != null;
+        assert this.storage != null;
+
         TaskList loaded;
         try {
             loaded = new TaskList(storage.load());
@@ -44,6 +49,7 @@ public class Saajid {
             String input = ui.nextCommand();
             try {
                 Command command = parser.parse(input); // Parse into command
+                assert command != null; // command is assumed to never be null
                 command.execute(tasks, ui);
                 storage.save(tasks.getTasks()); // Execute command
                 isExit = command.isExit();   // Check if exit
@@ -55,6 +61,7 @@ public class Saajid {
 
     public String processInput(String input) {
         // Temporary Ui that collects messages instead of printing
+        assert input != null; //input string is assumed to never be null
         class StringUi extends Ui {
             private final StringBuilder output = new StringBuilder();
 
@@ -78,6 +85,7 @@ public class Saajid {
 
         try {
             Command command = parser.parse(input);
+            assert command != null;
             command.execute(tasks, stringUi);
             storage.save(tasks.getTasks());
             result = stringUi.getOutput();

@@ -29,8 +29,8 @@ public class Parser {
      * @throws SaajidException If input cannot be parsed into a valid command.
      */
     public Command parse(String input) throws SaajidException {
-        String[] words = input.split(" ", 2); //split the input string into 2 part if any
-        String commandWord = words[0]; //first word determines command type
+        String[] words = input.split(" ", 2);
+        String commandWord = words[0];
 
         if (commandWord.equalsIgnoreCase("bye")) {
             return new ExitCommand();

@@ -31,6 +31,8 @@ public class Storage {
      */
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
+        assert this.filePath != null; //assuming that filepath is never null
+        assert !filePath.isBlank();
     }
 
     /** Loads tasks from the file into memory. */
@@ -45,7 +47,6 @@ public class Storage {
             }
             return tasks;
         }
-
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -62,6 +63,7 @@ public class Storage {
 
     /** Saves the current list of tasks to the file. */
     public void save(List<Task> tasks) throws SaajidException {
+        assert tasks != null;
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
             for (Task t : tasks) {
                 writer.write(formatTask(t));
@@ -74,6 +76,7 @@ public class Storage {
 
     /** Parse a line into a Task object. */
     private Task parseTask(String line) {
+        assert line != null;
         try {
             String[] parts = line.split("\\|");
             String type = parts[0].trim();
@@ -109,6 +112,7 @@ public class Storage {
 
     /** Convert a Task into a saveable string. */
     private String formatTask(Task t) {
+        assert t != null;
         if (t instanceof Todo) {
             return "T | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription();
         } else if (t instanceof Deadline) {
