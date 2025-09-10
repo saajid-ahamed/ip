@@ -21,6 +21,11 @@ public class Saajid {
         this.parser = new Parser();
         this.storage = new Storage("./data/saajid.txt");
 
+        //all variables are assumed to not be null
+        assert this.ui != null;
+        assert this.parser != null;
+        assert this.storage != null;
+
         TaskList loaded;
         try {
             loaded = new TaskList(storage.load());
@@ -77,6 +82,7 @@ public class Saajid {
         StringUi stringUi = new StringUi();
         try {
             Command command = parser.parse(input);
+            assert command != null;
             command.execute(tasks, stringUi);
             storage.save(tasks.getTasks());
             return stringUi.getOutput();
