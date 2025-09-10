@@ -31,72 +31,150 @@ public class Parser {
     public Command parse(String input) throws SaajidException {
         String[] words = input.split(" ", 2);
         String commandWord = words[0];
-
         if (commandWord.equalsIgnoreCase("bye")) {
             return new ExitCommand();
         } else if (commandWord.equalsIgnoreCase("list")) {
             return new ListCommand();
         } else if (commandWord.equalsIgnoreCase("delete")) {
-            if (words.length < 2) {
-                throw new SaajidException("Please provide a task number to delete!");
-            }
-            return new DeleteCommand(Integer.parseInt(words[1]) - 1);
+            return getDeleteCommand(words);
         } else if (commandWord.equalsIgnoreCase("mark")) {
-            if (words.length < 2) {
-                throw new SaajidException("Please provide a task number to mark!");
-            }
-            return new MarkCommand(Integer.parseInt(words[1]) - 1);
+            return getMarkCommand(words);
         } else if (commandWord.equalsIgnoreCase("unmark")) {
-            if (words.length < 2) {
-                throw new SaajidException("Please provide a task number to unmark!");
-            }
-            return new UnmarkCommand(Integer.parseInt(words[1]) - 1);
+            return getUnmarkCommand(words);
         } else if (commandWord.equalsIgnoreCase("todo")) {
-            if (words.length < 2 || words[1].trim().isEmpty()) {
-                throw new SaajidException("The todo command must include a description.");
-            }
-            return new AddCommand(new Todo(words[1].trim()));
+            return getAddTodoCommand(words);
         } else if (commandWord.equalsIgnoreCase("deadline")) {
-            if (words.length < 2 || !words[1].contains("/by")) {
-                throw new SaajidException("The deadline command must include a description and a /by date-time.");
-            }
-            String[] parts = words[1].split("/by", 2);
-            String desc = parts[0].trim();
-            String dateTimeStr = parts[1].trim();
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
-                return new AddCommand(new Deadline(desc, by));
-            } catch (Exception e) {
-                throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format," +
-                        "e.g., 2019-12-02 1800");
-            }
+            return getAddDeadlineCommand(words);
         } else if (commandWord.equalsIgnoreCase("event")) {
-            if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
-                throw new SaajidException("The event command must include a description, /from and /to date-times.");
-            }
-            String[] parts = words[1].split("/from", 2);
-            String desc = parts[0].trim();
-
-            String[] timeParts = parts[1].split("/to", 2);
-            String fromStr = timeParts[0].trim();
-            String toStr = timeParts[1].trim();
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                LocalDateTime from = LocalDateTime.parse(fromStr, formatter);
-                LocalDateTime to = LocalDateTime.parse(toStr, formatter);
-                return new AddCommand(new Event(desc, from, to));
-            } catch (Exception e) {
-                throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
-                        "e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
-            }
+            return getEventAddCommand(words);
         } else if (commandWord.equalsIgnoreCase("find")) {
-            if (words.length < 2 || words[1].trim().isEmpty()) {
-                throw new SaajidException("The find command must include a keyword.");
-            }
-            return new FindCommand(words[1].trim());
+            return getFindCommand(words);
         } else {
             throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
         }
+    }
+
+    // Added all of these private methods through the use if IDE refactor method
+
+    /**
+     * Creates a {@link FindCommand} from user input.
+     *
+     * @param words The split input string, where words[1] should contain the keyword.
+     * @return A FindCommand with the given keyword.
+     * @throws SaajidException If no keyword is provided.
+     */
+    private static FindCommand getFindCommand(String[] words) throws SaajidException {
+        if (words.length < 2 || words[1].trim().isEmpty()) {
+            throw new SaajidException("The find command must include a keyword.");
+        }
+        return new FindCommand(words[1].trim());
+    }
+
+    /**
+     * Creates an {@link AddCommand} containing an {@link Event}.
+     *
+     * @param words The split input string, expected format: description /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm.
+     * @return An AddCommand wrapping a new Event.
+     * @throws SaajidException If the input is missing required parts or date-time is invalid.
+     */
+    private static AddCommand getEventAddCommand(String[] words) throws SaajidException {
+        if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
+            throw new SaajidException("The event command must include a description, /from and /to date-times.");
+        }
+        String[] parts = words[1].split("/from", 2);
+        String desc = parts[0].trim();
+
+        String[] timeParts = parts[1].split("/to", 2);
+        String fromStr = timeParts[0].trim();
+        String toStr = timeParts[1].trim();
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime from = LocalDateTime.parse(fromStr, formatter);
+            LocalDateTime to = LocalDateTime.parse(toStr, formatter);
+            return new AddCommand(new Event(desc, from, to));
+        } catch (Exception e) {
+            throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
+                    "e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
+        }
+    }
+
+    /**
+     * Creates an {@link AddCommand} containing a {@link Deadline}.
+     *
+     * @param words The split input string, expected format: description /by yyyy-MM-dd HHmm.
+     * @return An AddCommand wrapping a new Deadline.
+     * @throws SaajidException If input is missing required parts or date-time is invalid.
+     */
+    private static AddCommand getAddDeadlineCommand(String[] words) throws SaajidException {
+        if (words.length < 2 || !words[1].contains("/by")) {
+            throw new SaajidException("The deadline command must include a description and a /by date-time.");
+        }
+        String[] parts = words[1].split("/by", 2);
+        String desc = parts[0].trim();
+        String dateTimeStr = parts[1].trim();
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
+            return new AddCommand(new Deadline(desc, by));
+        } catch (Exception e) {
+            throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format," +
+                    "e.g., 2019-12-02 1800");
+        }
+    }
+
+    /**
+     * Creates an {@link AddCommand} containing a {@link Todo}.
+     *
+     * @param words The split input string, where words[1] is the description.
+     * @return An AddCommand wrapping a new Todo.
+     * @throws SaajidException If description is missing or empty.
+     */
+    private static AddCommand getAddTodoCommand(String[] words) throws SaajidException {
+        if (words.length < 2 || words[1].trim().isEmpty()) {
+            throw new SaajidException("The todo command must include a description.");
+        }
+        return new AddCommand(new Todo(words[1].trim()));
+    }
+
+    /**
+     * Creates an {@link UnmarkCommand} from user input.
+     *
+     * @param words The split input string, where words[1] should contain the task number.
+     * @return An UnmarkCommand for the specified task.
+     * @throws SaajidException If task number is missing.
+     */
+    private static UnmarkCommand getUnmarkCommand(String[] words) throws SaajidException {
+        if (words.length < 2) {
+            throw new SaajidException("Please provide a task number to unmark!");
+        }
+        return new UnmarkCommand(Integer.parseInt(words[1]) - 1);
+    }
+
+    /**
+     * Creates a {@link MarkCommand} from user input.
+     *
+     * @param words The split input string, where words[1] should contain the task number.
+     * @return A MarkCommand for the specified task.
+     * @throws SaajidException If task number is missing.
+     */
+    private static MarkCommand getMarkCommand(String[] words) throws SaajidException {
+        if (words.length < 2) {
+            throw new SaajidException("Please provide a task number to mark!");
+        }
+        return new MarkCommand(Integer.parseInt(words[1]) - 1);
+    }
+
+    /**
+     * Creates a {@link DeleteCommand} from user input.
+     *
+     * @param words The split input string, where words[1] should contain the task number.
+     * @return A DeleteCommand for the specified task.
+     * @throws SaajidException If task number is missing.
+     */
+    private static DeleteCommand getDeleteCommand(String[] words) throws SaajidException {
+        if (words.length < 2) {
+            throw new SaajidException("Please provide a task number to delete!");
+        }
+        return new DeleteCommand(Integer.parseInt(words[1]) - 1);
     }
 }
