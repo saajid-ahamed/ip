@@ -79,23 +79,16 @@ public class Storage {
             String type = parts[0].trim();
             boolean isDone = parts[1].trim().equals("1");
             String desc = parts[2].trim();
-
             Task t;
             switch (type) {
                 case "T":
-                    t = new Todo(desc);
+                    t = createTodoTask(desc);
                     break;
                 case "D":
-                    LocalDateTime by = LocalDateTime.parse(parts[3].trim(),
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    t = new Deadline(desc, by);
+                    t = createDeadlineTask(parts, desc);
                     break;
                 case "E":
-                    LocalDateTime from = LocalDateTime.parse(parts[3].trim(),
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    LocalDateTime to = LocalDateTime.parse(parts[4].trim(),
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    t = new Event(desc, from, to);
+                    t = createEventTask(parts, desc);
                     break;
                 default:
                     return null; // corrupted line
@@ -105,6 +98,32 @@ public class Storage {
         } catch (Exception e) {
             return null; // corrupted line
         }
+    }
+    
+    //All of these refactored method created through IDE refactor method
+
+    private static Task createEventTask(String[] parts, String desc) {
+        Task t;
+        LocalDateTime from = LocalDateTime.parse(parts[3].trim(),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        LocalDateTime to = LocalDateTime.parse(parts[4].trim(),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        t = new Event(desc, from, to);
+        return t;
+    }
+
+    private static Task createDeadlineTask(String[] parts, String desc) {
+        Task t;
+        LocalDateTime by = LocalDateTime.parse(parts[3].trim(),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+        t = new Deadline(desc, by);
+        return t;
+    }
+
+    private static Task createTodoTask(String desc) {
+        Task t;
+        t = new Todo(desc);
+        return t;
     }
 
     /** Convert a Task into a saveable string. */

@@ -18,16 +18,12 @@
 
         /** Displays greeting message with lines. */
         public void greeting() {
-            System.out.println(Ui.HORIZONTAL_LINE);
-            System.out.println(String.format("Hello! I'm %s\nWhat can I do for you?", Ui.NAME));
-            System.out.println("\n" + Ui.HORIZONTAL_LINE);
+            printStandardMessage(String.format("Hello! I'm %s\nWhat can I do for you?", Ui.NAME));
         }
 
         /** Displays exit message with lines. */
         public void exit() {
-            System.out.println(Ui.HORIZONTAL_LINE);
-            System.out.println("Bye. Hope to see you soon!");
-            System.out.println("\n" + Ui.HORIZONTAL_LINE);
+            printStandardMessage("Bye. Hope to see you soon!");
         }
 
         /** Reads next command input from user and trims. */
@@ -40,19 +36,22 @@
         }
         /** Displays an error message with lines. */
         public void showError(String message) {
-            System.out.println(Ui.HORIZONTAL_LINE);
-            System.out.println(message);
-            System.out.println("\n" + Ui.HORIZONTAL_LINE);
+            printStandardMessage(message);
         }
         /** Displays a general message with lines. */
         public void showMessage(String message) {
-            System.out.println(Ui.HORIZONTAL_LINE);
-            System.out.println(message);
-            System.out.println("\n" + Ui.HORIZONTAL_LINE);
+            printStandardMessage(message);
         }
         /** Prints a line of message with no structure. */
         public void printLine(String message) {
             System.out.println(message);
+        }
+
+        /** Prints a message wrapped with horizontal lines. */
+        private void printStandardMessage(String message) {
+            System.out.println(HORIZONTAL_LINE);
+            System.out.println(message);
+            System.out.println("\n" + HORIZONTAL_LINE);
         }
 
     }

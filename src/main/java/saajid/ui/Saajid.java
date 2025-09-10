@@ -42,50 +42,47 @@ public class Saajid {
         boolean isExit = false;
         while (!isExit) {
             String input = ui.nextCommand();
-            try {
-                Command command = parser.parse(input); // Parse into command
-                command.execute(tasks, ui);
-                storage.save(tasks.getTasks()); // Execute command
-                isExit = command.isExit();   // Check if exit
-            } catch (SaajidException e) {
-                ui.showError(e.getMessage());
-            }
+            isExit = handleUserInput(input);
         }
     }
 
-    public String processInput(String input) {
-        // Temporary Ui that collects messages instead of printing
-        class StringUi extends Ui {
-            private final StringBuilder output = new StringBuilder();
-
-            @Override
-            public void showMessage(String message) {
-                output.append(message).append("\n");
-            }
-
-            @Override
-            public void showError(String message) {
-                output.append(message).append("\n");
-            }
-
-            public String getOutput() {
-                return output.toString().trim();
-            }
+    /**
+     * Handles a single line of user input by parsing and executing the corresponding {@link Command}.
+     * Saves the updated task list to storage after execution.
+     *
+     * @param input The raw user input string.
+     * @return true if the command signals application exit (e.g., "bye"), false otherwise.
+     */
+    private boolean handleUserInput(String input) {
+        try {
+            Command command = parser.parse(input);
+            command.execute(tasks, ui);
+            storage.save(tasks.getTasks());
+            return command.isExit();
+        } catch (SaajidException e) {
+            ui.showError(e.getMessage());
+            return false;
         }
+    }
 
+    /**
+     * Processes a single user input and returns the response as a string.
+     * This method is intended for programmatic use (e.g., testing or GUI integration),
+     * unlike {@link #handleUserInput(String)} which interacts directly with the console UI.
+     *
+     * @param input The raw user input string.
+     * @return The chatbot's response as a string, or an error message if parsing fails.
+     */
+    public String processInput(String input) {
         StringUi stringUi = new StringUi();
-        String result;
-
         try {
             Command command = parser.parse(input);
             command.execute(tasks, stringUi);
             storage.save(tasks.getTasks());
-            result = stringUi.getOutput();
+            return stringUi.getOutput();
         } catch (SaajidException e) {
-            result = e.getMessage();
+            return e.getMessage();
         }
-
-        return result;
     }
 
     /** Main method to start the application. */
