@@ -14,6 +14,7 @@
         /** Constructs a Ui object for user interaction. */
         public Ui() {
             this.scanner = new Scanner(System.in);
+            assert scanner != null;
         }
 
         /** Displays greeting message with lines. */
@@ -32,7 +33,9 @@
 
         /** Reads next command input from user and trims. */
         public String nextCommand() {
-            return scanner.nextLine().trim();
+            String input = scanner.nextLine().trim();
+            assert input != null;
+            return input;
         }
         /** Displays a horizontal line. */
         public void showLine() {
@@ -40,18 +43,21 @@
         }
         /** Displays an error message with lines. */
         public void showError(String message) {
+            assert message != null;
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println(message);
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
         /** Displays a general message with lines. */
         public void showMessage(String message) {
+            assert message != null;
             System.out.println(Ui.HORIZONTAL_LINE);
             System.out.println(message);
             System.out.println("\n" + Ui.HORIZONTAL_LINE);
         }
         /** Prints a line of message with no structure. */
         public void printLine(String message) {
+            assert message != null;
             System.out.println(message);
         }
 
