@@ -7,6 +7,7 @@ import saajid.command.ExitCommand;
 import saajid.command.FindCommand;
 import saajid.command.ListCommand;
 import saajid.command.MarkCommand;
+import saajid.command.RescheduleCommand;
 import saajid.command.UnmarkCommand;
 import saajid.exception.SaajidException;
 import saajid.task.Deadline;
@@ -20,7 +21,7 @@ import java.time.format.DateTimeFormatter;
  * Parses user input strings and converts them into {@link Command} objects.
  */
 public class Parser {
-
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     /**
      * Parses a given input string into a {@link Command}.
      *
@@ -46,9 +47,11 @@ public class Parser {
         } else if (commandWord.equalsIgnoreCase("deadline")) {
             return getAddDeadlineCommand(words);
         } else if (commandWord.equalsIgnoreCase("event")) {
-            return getEventAddCommand(words);
+            return getAddEventCommand(words);
         } else if (commandWord.equalsIgnoreCase("find")) {
             return getFindCommand(words);
+        } else if (commandWord.equalsIgnoreCase("reschedule")) {
+            return getRescheduleCommand(words);
         } else {
             throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
         }
@@ -77,7 +80,7 @@ public class Parser {
      * @return An AddCommand wrapping a new Event.
      * @throws SaajidException If the input is missing required parts or date-time is invalid.
      */
-    private static AddCommand getEventAddCommand(String[] words) throws SaajidException {
+    private static AddCommand getAddEventCommand(String[] words) throws SaajidException {
         if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
             throw new SaajidException("The event command must include a description, /from and /to date-times.");
         }
@@ -176,5 +179,49 @@ public class Parser {
             throw new SaajidException("Please provide a task number to delete!");
         }
         return new DeleteCommand(Integer.parseInt(words[1]) - 1);
+    }
+
+    private static RescheduleCommand getRescheduleCommand(String[] words) throws SaajidException {
+        if (words.length < 2 || words[1].trim().isEmpty()) {
+            throw new SaajidException("Reschedule command requires: taskIndex and new date/time.");
+        }
+        String[] parts = words[1].split(" ", 2);
+        if (parts.length < 2) {
+            throw new SaajidException("Please provide task index and new schedule details.");
+        }
+        int taskIndex = Integer.parseInt(parts[0]) - 1;
+        String details = parts[1].trim();
+        if (details.contains("/by")) {
+            return getRescheduleDeadlineCommand(details, taskIndex);
+        } else if (details.contains("/from") && details.contains("/to")) {
+            return getRescheduleEventCommand(details, taskIndex);
+        } else {
+            throw new SaajidException("Reschedule requires /by for deadlines or /from and /to for events.");
+        }
+    }
+
+    // Refactor methods created using IDE
+    private static RescheduleCommand getRescheduleEventCommand(String details, int taskIndex) throws SaajidException {
+        String[] timeParts = details.split("/from", 2)[1].split("/to", 2);
+        String fromStr = timeParts[0].trim();
+        String toStr = timeParts[1].trim();
+
+        try {
+            LocalDateTime from = LocalDateTime.parse(fromStr, FORMATTER);
+            LocalDateTime to = LocalDateTime.parse(toStr, FORMATTER);
+            return new RescheduleCommand(taskIndex, from, to);
+        } catch (Exception e) {
+            throw new SaajidException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
+        }
+    }
+
+    private static RescheduleCommand getRescheduleDeadlineCommand(String details, int taskIndex) throws SaajidException {
+        String newByStr = details.split("/by", 2)[1].trim();
+        try {
+            LocalDateTime newBy = LocalDateTime.parse(newByStr, FORMATTER);
+            return new RescheduleCommand(taskIndex, newBy);
+        } catch (Exception e) {
+            throw new SaajidException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
+        }
     }
 }

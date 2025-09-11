@@ -19,6 +19,10 @@ public class Deadline extends Task {
         return by;
     }
 
+    public void setBy(LocalDateTime newby) {
+        this.by = newby;
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy HH:mm");

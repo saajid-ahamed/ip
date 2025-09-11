@@ -96,7 +96,9 @@ public class Storage {
                 default:
                     return null; // corrupted line
             }
-            if (isDone) t.markAsDone();
+            if (isDone) {
+                t.markAsDone();
+            }
             return t;
         } catch (Exception e) {
             return null; // corrupted line

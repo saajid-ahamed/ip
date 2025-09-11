@@ -5,6 +5,8 @@ import saajid.ui.Ui;
 
 import java.util.ArrayList;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a list of tasks and provides operations to manage them.
  */
@@ -69,6 +71,19 @@ public class TaskList {
         } else {
             ui.showMessage(sb.toString().trim());
         }
+    }
+
+    public void rescheduleTask(Ui ui, Event task, LocalDateTime newFrom, LocalDateTime newTo) {
+        Event event = task;
+        event.setFrom(newFrom);
+        event.setTo(newTo);
+        ui.showMessage("Got it! Event rescheduled:\n" + event);
+    }
+
+    public void rescheduleTask(Ui ui, Deadline task, LocalDateTime newBy) {
+        Deadline deadline = task;
+        deadline.setBy(newBy);
+        ui.showMessage("Got it! Deadline rescheduled:\n" + deadline);
     }
 
     /* Returns a particular task at a particular index */

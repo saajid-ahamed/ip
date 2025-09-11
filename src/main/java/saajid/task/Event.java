@@ -25,6 +25,14 @@ public class Event extends Task {
         return to;
     }
 
+    public void setFrom(LocalDateTime from) {
+        this.from = from;
+    }
+
+    public void setTo(LocalDateTime to) {
+        this.to = to;
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy HH:mm");
