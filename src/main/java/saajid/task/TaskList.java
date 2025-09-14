@@ -7,6 +7,12 @@ import java.util.ArrayList;
 
 import java.time.LocalDateTime;
 
+/*
+    AI-assisted: Javadoc comments
+    AI provided me with the initial content to include in the javadoc comments for the following refactored methods.
+    AI provided a draft of these comments as well. Comments were then refined and implemented.
+     */
+
 /**
  * Represents a list of tasks and provides operations to manage them.
  */
@@ -73,6 +79,14 @@ public class TaskList {
         }
     }
 
+    /**
+     * Reschedules the specified Event task with new start and end times.
+     *
+     * @param ui the UI to display updates
+     * @param task the Event task to reschedule
+     * @param newFrom the new starting date and time
+     * @param newTo the new ending date and time
+     */
     public void rescheduleTask(Ui ui, Event task, LocalDateTime newFrom, LocalDateTime newTo) {
         Event event = task;
         event.setFrom(newFrom);
@@ -80,13 +94,25 @@ public class TaskList {
         ui.showMessage("Got it! Event rescheduled:\n" + event);
     }
 
+    /**
+     * Reschedules the specified Deadline task with a new deadline.
+     *
+     * @param ui the UI to display updates
+     * @param task the Deadline task to reschedule
+     * @param newBy the new deadline date and time
+     */
     public void rescheduleTask(Ui ui, Deadline task, LocalDateTime newBy) {
         Deadline deadline = task;
         deadline.setBy(newBy);
         ui.showMessage("Got it! Deadline rescheduled:\n" + deadline);
     }
 
-    /* Returns a particular task at a particular index */
+    /**
+     * Returns the task at the specified index.
+     *
+     * @param index the index of the task to retrieve
+     * @return the task at the specified index
+     */
     public Task getTask(int index) {
         return this.tasks.get(index);
     }

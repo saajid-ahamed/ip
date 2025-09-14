@@ -38,15 +38,21 @@ public class Storage {
     /** Loads tasks from the file into memory. */
     public ArrayList<Task> load() throws SaajidException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(filePath)) {
-            try {
-                Files.createDirectories(filePath.getParent());
-                Files.createFile(filePath);
-            } catch (IOException e) {
-                throw new SaajidException("Could not create data file: " + e.getMessage());
-            }
-            return tasks;
+        ArrayList<Task> tasks1 = getTasks(tasks);
+        if (tasks1 != null) {
+            return tasks1;
         }
+        return readTasksFromFile(tasks);
+    }
+
+    /**
+     * Reads tasks from the existing file.
+     *
+     * @param tasks The task list to populate.
+     * @return A populated list of tasks.
+     * @throws SaajidException If an error occurs while reading.
+     */
+    private ArrayList<Task> readTasksFromFile(ArrayList<Task> tasks) throws SaajidException {
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -61,7 +67,25 @@ public class Storage {
         return tasks;
     }
 
-    /** Saves the current list of tasks to the file. */
+    private ArrayList<Task> getTasks(ArrayList<Task> tasks) throws SaajidException {
+        if (!Files.exists(filePath)) {
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.createFile(filePath);
+            } catch (IOException e) {
+                throw new SaajidException("Could not create data file: " + e.getMessage());
+            }
+            return tasks;
+        }
+        return null;
+    }
+
+    /**
+     * Saves the given list of tasks to the file.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws SaajidException If there is an error writing to the file.
+     */
     public void save(List<Task> tasks) throws SaajidException {
         assert tasks != null;
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
@@ -74,7 +98,12 @@ public class Storage {
         }
     }
 
-    /** Parse a line into a Task object. */
+    /**
+     * Converts a line of text into a Task object.
+     *
+     * @param line The line from the save file.
+     * @return The parsed Task, or null if invalid.
+     */
     private Task parseTask(String line) {
         assert line != null;
         try {
@@ -83,19 +112,8 @@ public class Storage {
             boolean isDone = parts[1].trim().equals("1");
             String desc = parts[2].trim();
             Task t;
-            switch (type) {
-                case "T":
-                    t = createTodoTask(desc);
-                    break;
-                case "D":
-                    t = createDeadlineTask(parts, desc);
-                    break;
-                case "E":
-                    t = createEventTask(parts, desc);
-                    break;
-                default:
-                    return null; // corrupted line
-            }
+            t = createTask(type, desc, parts);
+            if (t == null) return null; // corrupted line
             if (isDone) {
                 t.markAsDone();
             }
@@ -104,9 +122,56 @@ public class Storage {
             return null; // corrupted line
         }
     }
-    
-    //All of these refactored method created through IDE refactor method
 
+    /*
+    AI-assisted:Refactor
+    refactoring getRescheduleCommand into getRescheduleEventCommand and getRescheduleDeadlineCommand was assisted
+    by AI (ChatGPT). The AI provided guidance on applying guard clauses,
+    avoiding deep nesting, and following SLAP (Single Level of Abstraction Principle).
+    The code  reviewed, tested, and integrated the suggestions into the final code and implemented it.
+    */
+
+    /**
+     * Creates a Task from the given parts.
+     *
+     * @param type  The type of task ("T", "D", "E").
+     * @param desc  The description of the task.
+     * @param parts The split line from the save file.
+     * @return A Task object, or null if type is invalid.
+     */
+    private static Task createTask(String type, String desc, String[] parts) {
+        Task t;
+        switch (type) {
+            case "T":
+                t = createTodoTask(desc);
+                break;
+            case "D":
+                t = createDeadlineTask(parts, desc);
+                break;
+            case "E":
+                t = createEventTask(parts, desc);
+                break;
+            default:
+                return null;
+        }
+        return t;
+    }
+
+    //All of these refactored method created through IDE refactor method
+    
+    /*
+    AI-assisted: Javadoc comments
+    AI provided me with the initial content to include in the javadoc comments for the following refactored methods.
+    AI provided a draft of these comments as well. Comments were then refined and implemented.
+     */
+    
+    /**
+     * Creates an Event task from the given parts.
+     *
+     * @param parts The split line from the save file.
+     * @param desc  The task description.
+     * @return An Event task.
+     */
     private static Task createEventTask(String[] parts, String desc) {
         Task t;
         LocalDateTime from = LocalDateTime.parse(parts[3].trim(),
@@ -117,6 +182,13 @@ public class Storage {
         return t;
     }
 
+    /**
+     * Creates a Deadline task from the given parts.
+     *
+     * @param parts The split line from the save file.
+     * @param desc  The task description.
+     * @return A Deadline task.
+     */
     private static Task createDeadlineTask(String[] parts, String desc) {
         Task t;
         LocalDateTime by = LocalDateTime.parse(parts[3].trim(),
@@ -125,25 +197,66 @@ public class Storage {
         return t;
     }
 
+    /**
+     * Creates a Todo task from the given description.
+     *
+     * @param desc The task description.
+     * @return A Todo task.
+     */
     private static Task createTodoTask(String desc) {
         Task t;
         t = new Todo(desc);
         return t;
     }
 
-    /** Convert a Task into a saveable string. */
+    /**
+     * Converts a Task object into a string format for saving.
+     *
+     * @param t The task to format.
+     * @return A string representation of the task.
+     */
     private String formatTask(Task t) {
         assert t != null;
         if (t instanceof Todo) {
-            return "T | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription();
+            return formatTodo(t);
         } else if (t instanceof Deadline) {
-            return "D | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
-                    + " | " + ((Deadline) t).getBy().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            return formatDeadline(t);
         } else if (t instanceof Event) {
-            return "E | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
-                    + " | " + ((Event) t).getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
-                    + " | " + ((Event) t).getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            return formatEvent(t);
         }
         return "";
+    }
+
+    /**
+     * Formats a Todo task into a saveable string.
+     *
+     * @param t The Todo task.
+     * @return The formatted string.
+     */
+    private static String formatTodo(Task t) {
+        return "T | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription();
+    }
+
+    /**
+     * Formats an Event task into a saveable string.
+     *
+     * @param t The Event task.
+     * @return The formatted string.
+     */
+    private static String formatEvent(Task t) {
+        return "E | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
+                + " | " + ((Event) t).getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"))
+                + " | " + ((Event) t).getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+    }
+
+    /**
+     * Formats a Deadline task into a saveable string.
+     *
+     * @param t The Deadline task.
+     * @return The formatted string.
+     */
+    private static String formatDeadline(Task t) {
+        return "D | " + (t.getIsDone() ? "1" : "0") + " | " + t.getDescription()
+                + " | " + ((Deadline) t).getBy().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
     }
 }

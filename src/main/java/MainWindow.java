@@ -5,6 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import saajid.ui.Saajid;
 
 /**
@@ -33,6 +34,9 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setDuke(Saajid saajid) {
         this.saajid = saajid;
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog("Hello! I'm Saajid\nWhat can I do for you?", dukeImage)
+        );
     }
 
     /**
@@ -48,5 +52,10 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getDukeDialog(response, dukeImage)
         );
         userInput.clear();
+
+        if (input.trim().equalsIgnoreCase("bye")) {
+            Stage stage = (Stage) userInput.getScene().getWindow();
+            stage.close();
+        }
     }
 }

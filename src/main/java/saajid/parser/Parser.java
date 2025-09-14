@@ -181,6 +181,22 @@ public class Parser {
         return new DeleteCommand(Integer.parseInt(words[1]) - 1);
     }
 
+    /*
+    AI-assisted:Refactor
+    refactoring getRescheduleCommand into getRescheduleEventCommand and getRescheduleDeadlineCommand was assisted
+    by AI (ChatGPT). The AI provided guidance on applying guard clauses,
+    avoiding deep nesting, and following SLAP (Single Level of Abstraction Principle).
+    The code was then reviewed, tested, and integrated into the final code and implemented it.
+    */
+
+    /**
+     * Parses input and creates a {@link RescheduleCommand}.
+     * Supports rescheduling of deadlines (/by) and events (/from ... /to).
+     *
+     * @param words User input split into command and details.
+     * @return A RescheduleCommand for the given task.
+     * @throws SaajidException If format is invalid or details are missing.
+     */
     private static RescheduleCommand getRescheduleCommand(String[] words) throws SaajidException {
         if (words.length < 2 || words[1].trim().isEmpty()) {
             throw new SaajidException("Reschedule command requires: taskIndex and new date/time.");
@@ -200,7 +216,23 @@ public class Parser {
         }
     }
 
-    // Refactor methods created using IDE
+    /*
+    AI-assisted: Javadoc comments
+    AI provided me with the initial content to include in the javadoc comments for the following refactored methods.
+    AI provided a draft of these comments as well. Comments were then refined and implemented.
+     */
+
+    /**
+     * Creates a {@link RescheduleCommand} for an {@link saajid.task.Event}.
+     * <p>
+     * Expected input format:
+     * <code>/from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm</code>.
+     *
+     * @param details   The schedule details provided by the user.
+     * @param taskIndex The zero-based index of the task to be rescheduled.
+     * @return A {@link RescheduleCommand} with updated start and end times.
+     * @throws SaajidException If parsing of date-time fails or input format is invalid.
+     */
     private static RescheduleCommand getRescheduleEventCommand(String details, int taskIndex) throws SaajidException {
         String[] timeParts = details.split("/from", 2)[1].split("/to", 2);
         String fromStr = timeParts[0].trim();
@@ -215,6 +247,17 @@ public class Parser {
         }
     }
 
+    /**
+     * Creates a {@link RescheduleCommand} for a {@link saajid.task.Deadline}.
+     * <p>
+     * Expected input format:
+     * <code>/by yyyy-MM-dd HHmm</code>.
+     *
+     * @param details   The schedule details provided by the user.
+     * @param taskIndex The zero-based index of the task to be rescheduled.
+     * @return A {@link RescheduleCommand} with updated deadline.
+     * @throws SaajidException If parsing of date-time fails or input format is invalid.
+     */
     private static RescheduleCommand getRescheduleDeadlineCommand(String details, int taskIndex) throws SaajidException {
         String newByStr = details.split("/by", 2)[1].trim();
         try {

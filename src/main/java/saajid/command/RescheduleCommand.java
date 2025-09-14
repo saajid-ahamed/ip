@@ -9,6 +9,12 @@ import saajid.ui.Ui;
 
 import java.time.LocalDateTime;
 
+/*
+    AI-assisted: Javadoc comments
+    AI provided me with the initial content to include in the javadoc comments for the following refactored methods.
+    AI provided a draft of these comments as well. Comments were then refined and implemented.
+     */
+
 /**
  * Represents a command that reschedules a Deadline or Event task.
  */
@@ -46,6 +52,13 @@ public class RescheduleCommand extends Command {
         this.newBy = null;
     }
 
+    /**
+     * Reschedules the specified task if it is a Deadline or Event.
+     *
+     * @param tasks the TaskList containing the task
+     * @param ui the UI to display updates
+     * @throws SaajidException if the task index is invalid or cannot be rescheduled
+     */
     @Override
     public void execute(TaskList tasks, Ui ui) throws SaajidException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
