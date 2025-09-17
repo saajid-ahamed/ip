@@ -1,6 +1,6 @@
 package saajid.storage;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Task;
@@ -36,7 +36,7 @@ public class Storage {
     }
 
     /** Loads tasks from the file into memory. */
-    public ArrayList<Task> load() throws SaajidException {
+    public ArrayList<Task> load() throws InvalidCommandException {
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Task> tasks1 = getTasks(tasks);
         if (tasks1 != null) {
@@ -50,9 +50,9 @@ public class Storage {
      *
      * @param tasks The task list to populate.
      * @return A populated list of tasks.
-     * @throws SaajidException If an error occurs while reading.
+     * @throws InvalidCommandException If an error occurs while reading.
      */
-    private ArrayList<Task> readTasksFromFile(ArrayList<Task> tasks) throws SaajidException {
+    private ArrayList<Task> readTasksFromFile(ArrayList<Task> tasks) throws InvalidCommandException {
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -62,18 +62,18 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            throw new SaajidException("Error reading data file: " + e.getMessage());
+            throw new InvalidCommandException("Error reading data file: " + e.getMessage());
         }
         return tasks;
     }
 
-    private ArrayList<Task> getTasks(ArrayList<Task> tasks) throws SaajidException {
+    private ArrayList<Task> getTasks(ArrayList<Task> tasks) throws InvalidCommandException {
         if (!Files.exists(filePath)) {
             try {
                 Files.createDirectories(filePath.getParent());
                 Files.createFile(filePath);
             } catch (IOException e) {
-                throw new SaajidException("Could not create data file: " + e.getMessage());
+                throw new InvalidCommandException("Could not create data file: " + e.getMessage());
             }
             return tasks;
         }
@@ -84,9 +84,9 @@ public class Storage {
      * Saves the given list of tasks to the file.
      *
      * @param tasks The list of tasks to save.
-     * @throws SaajidException If there is an error writing to the file.
+     * @throws InvalidCommandException If there is an error writing to the file.
      */
-    public void save(List<Task> tasks) throws SaajidException {
+    public void save(List<Task> tasks) throws InvalidCommandException {
         assert tasks != null;
         try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
             for (Task t : tasks) {
@@ -94,7 +94,7 @@ public class Storage {
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new SaajidException("Error writing to data file: " + e.getMessage());
+            throw new InvalidCommandException("Error writing to data file: " + e.getMessage());
         }
     }
 

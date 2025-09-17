@@ -1,6 +1,6 @@
 package saajid.command;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.task.TaskList;
 import saajid.ui.Ui;
 
@@ -26,10 +26,10 @@ public class FindCommand extends Command {
      *
      * @param tasks the TaskList to search in
      * @param ui the UI to display the search results
-     * @throws SaajidException if an error occurs while finding tasks
+     * @throws InvalidCommandException if an error occurs while finding tasks
      */
     @Override
-    public void execute(TaskList tasks, Ui ui) throws SaajidException {
+    public void execute(TaskList tasks, Ui ui) throws InvalidCommandException {
         tasks.findTasks(keyword, ui);
     }
 }

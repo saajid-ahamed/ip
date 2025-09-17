@@ -1,6 +1,6 @@
 package saajid.task;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.ui.Ui;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public class TaskList {
     /**
     * Deletes a task from the list by index and shows a confirmation message.
     */
-    public void deleteTask(int index, Ui ui) throws SaajidException {
+    public void deleteTask(int index, Ui ui) throws InvalidCommandException {
         if (index < 0 || index >= this.tasks.size()) {
-            throw new SaajidException("Task number " + (index+1) + " does not exist.");
+            throw new InvalidCommandException("Task number " + (index+1) + " does not exist.");
         }
         Task removed = this.tasks.remove(index);
         ui.showMessage("Noted. I've removed this task:\n  " + removed

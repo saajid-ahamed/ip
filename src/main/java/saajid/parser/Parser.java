@@ -9,7 +9,7 @@ import saajid.command.ListCommand;
 import saajid.command.MarkCommand;
 import saajid.command.RescheduleCommand;
 import saajid.command.UnmarkCommand;
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Todo;
@@ -27,9 +27,9 @@ public class Parser {
      *
      * @param input The full user input string.
      * @return The corresponding command.
-     * @throws SaajidException If input cannot be parsed into a valid command.
+     * @throws InvalidCommandException If input cannot be parsed into a valid command.
      */
-    public Command parse(String input) throws SaajidException {
+    public Command parse(String input) throws InvalidCommandException {
         String[] words = input.split(" ", 2);
         String commandWord = words[0];
         if (commandWord.equalsIgnoreCase("bye")) {
@@ -53,7 +53,7 @@ public class Parser {
         } else if (commandWord.equalsIgnoreCase("reschedule")) {
             return getRescheduleCommand(words);
         } else {
-            throw new SaajidException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
+            throw new InvalidCommandException("I AM SORRY BUT I DO NOT UNDERSTAND WHAT THAT MEANS!");
         }
     }
 
@@ -64,11 +64,11 @@ public class Parser {
      *
      * @param words The split input string, where words[1] should contain the keyword.
      * @return A FindCommand with the given keyword.
-     * @throws SaajidException If no keyword is provided.
+     * @throws InvalidCommandException If no keyword is provided.
      */
-    private static FindCommand getFindCommand(String[] words) throws SaajidException {
+    private static FindCommand getFindCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2 || words[1].trim().isEmpty()) {
-            throw new SaajidException("The find command must include a keyword.");
+            throw new InvalidCommandException("The find command must include a keyword.");
         }
         return new FindCommand(words[1].trim());
     }
@@ -78,11 +78,13 @@ public class Parser {
      *
      * @param words The split input string, expected format: description /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm.
      * @return An AddCommand wrapping a new Event.
-     * @throws SaajidException If the input is missing required parts or date-time is invalid.
+     * @throws InvalidCommandException If the input is missing required parts or date-time is invalid.
      */
-    private static AddCommand getAddEventCommand(String[] words) throws SaajidException {
+    private static AddCommand getAddEventCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2 || !words[1].contains("/from") || !words[1].contains("/to")) {
-            throw new SaajidException("The event command must include a description, /from and /to date-times.");
+            throw new InvalidCommandException("The event command must include a description, " +
+                            "/from and /to date-times."
+            );
         }
         String[] parts = words[1].split("/from", 2);
         String desc = parts[0].trim();
@@ -96,7 +98,7 @@ public class Parser {
             LocalDateTime to = LocalDateTime.parse(toStr, formatter);
             return new AddCommand(new Event(desc, from, to));
         } catch (Exception e) {
-            throw new SaajidException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
+            throw new InvalidCommandException("Please enter /from and /to in yyyy-MM-dd HHmm format," +
                     "e.g., /from 2019-12-06 1400 /to 2019-12-06 1600");
         }
     }
@@ -106,11 +108,11 @@ public class Parser {
      *
      * @param words The split input string, expected format: description /by yyyy-MM-dd HHmm.
      * @return An AddCommand wrapping a new Deadline.
-     * @throws SaajidException If input is missing required parts or date-time is invalid.
+     * @throws InvalidCommandException If input is missing required parts or date-time is invalid.
      */
-    private static AddCommand getAddDeadlineCommand(String[] words) throws SaajidException {
+    private static AddCommand getAddDeadlineCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2 || !words[1].contains("/by")) {
-            throw new SaajidException("The deadline command must include a description and a /by date-time.");
+            throw new InvalidCommandException("The deadline command must include a description and a /by date-time.");
         }
         String[] parts = words[1].split("/by", 2);
         String desc = parts[0].trim();
@@ -120,7 +122,7 @@ public class Parser {
             LocalDateTime by = LocalDateTime.parse(dateTimeStr, formatter);
             return new AddCommand(new Deadline(desc, by));
         } catch (Exception e) {
-            throw new SaajidException("Please enter date and time in yyyy-MM-dd HHmm format," +
+            throw new InvalidCommandException("Please enter date and time in yyyy-MM-dd HHmm format," +
                     "e.g., 2019-12-02 1800");
         }
     }
@@ -130,11 +132,11 @@ public class Parser {
      *
      * @param words The split input string, where words[1] is the description.
      * @return An AddCommand wrapping a new Todo.
-     * @throws SaajidException If description is missing or empty.
+     * @throws InvalidCommandException If description is missing or empty.
      */
-    private static AddCommand getAddTodoCommand(String[] words) throws SaajidException {
+    private static AddCommand getAddTodoCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2 || words[1].trim().isEmpty()) {
-            throw new SaajidException("The todo command must include a description.");
+            throw new InvalidCommandException("The todo command must include a description.");
         }
         return new AddCommand(new Todo(words[1].trim()));
     }
@@ -144,11 +146,11 @@ public class Parser {
      *
      * @param words The split input string, where words[1] should contain the task number.
      * @return An UnmarkCommand for the specified task.
-     * @throws SaajidException If task number is missing.
+     * @throws InvalidCommandException If task number is missing.
      */
-    private static UnmarkCommand getUnmarkCommand(String[] words) throws SaajidException {
+    private static UnmarkCommand getUnmarkCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2) {
-            throw new SaajidException("Please provide a task number to unmark!");
+            throw new InvalidCommandException("Please provide a task number to unmark!");
         }
         return new UnmarkCommand(Integer.parseInt(words[1]) - 1);
     }
@@ -158,11 +160,11 @@ public class Parser {
      *
      * @param words The split input string, where words[1] should contain the task number.
      * @return A MarkCommand for the specified task.
-     * @throws SaajidException If task number is missing.
+     * @throws InvalidCommandException If task number is missing.
      */
-    private static MarkCommand getMarkCommand(String[] words) throws SaajidException {
+    private static MarkCommand getMarkCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2) {
-            throw new SaajidException("Please provide a task number to mark!");
+            throw new InvalidCommandException("Please provide a task number to mark!");
         }
         return new MarkCommand(Integer.parseInt(words[1]) - 1);
     }
@@ -172,11 +174,11 @@ public class Parser {
      *
      * @param words The split input string, where words[1] should contain the task number.
      * @return A DeleteCommand for the specified task.
-     * @throws SaajidException If task number is missing.
+     * @throws InvalidCommandException If task number is missing.
      */
-    private static DeleteCommand getDeleteCommand(String[] words) throws SaajidException {
+    private static DeleteCommand getDeleteCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2) {
-            throw new SaajidException("Please provide a task number to delete!");
+            throw new InvalidCommandException("Please provide a task number to delete!");
         }
         return new DeleteCommand(Integer.parseInt(words[1]) - 1);
     }
@@ -195,15 +197,15 @@ public class Parser {
      *
      * @param words User input split into command and details.
      * @return A RescheduleCommand for the given task.
-     * @throws SaajidException If format is invalid or details are missing.
+     * @throws InvalidCommandException If format is invalid or details are missing.
      */
-    private static RescheduleCommand getRescheduleCommand(String[] words) throws SaajidException {
+    private static RescheduleCommand getRescheduleCommand(String[] words) throws InvalidCommandException {
         if (words.length < 2 || words[1].trim().isEmpty()) {
-            throw new SaajidException("Reschedule command requires: taskIndex and new date/time.");
+            throw new InvalidCommandException("Reschedule command requires: taskIndex and new date/time.");
         }
         String[] parts = words[1].split(" ", 2);
         if (parts.length < 2) {
-            throw new SaajidException("Please provide task index and new schedule details.");
+            throw new InvalidCommandException("Please provide task index and new schedule details.");
         }
         int taskIndex = Integer.parseInt(parts[0]) - 1;
         String details = parts[1].trim();
@@ -212,7 +214,7 @@ public class Parser {
         } else if (details.contains("/from") && details.contains("/to")) {
             return getRescheduleEventCommand(details, taskIndex);
         } else {
-            throw new SaajidException("Reschedule requires /by for deadlines or /from and /to for events.");
+            throw new InvalidCommandException("Reschedule requires /by for deadlines or /from and /to for events.");
         }
     }
 
@@ -231,9 +233,10 @@ public class Parser {
      * @param details   The schedule details provided by the user.
      * @param taskIndex The zero-based index of the task to be rescheduled.
      * @return A {@link RescheduleCommand} with updated start and end times.
-     * @throws SaajidException If parsing of date-time fails or input format is invalid.
+     * @throws InvalidCommandException If parsing of date-time fails or input format is invalid.
      */
-    private static RescheduleCommand getRescheduleEventCommand(String details, int taskIndex) throws SaajidException {
+    private static RescheduleCommand getRescheduleEventCommand(String details,
+                                                               int taskIndex) throws InvalidCommandException {
         String[] timeParts = details.split("/from", 2)[1].split("/to", 2);
         String fromStr = timeParts[0].trim();
         String toStr = timeParts[1].trim();
@@ -243,7 +246,7 @@ public class Parser {
             LocalDateTime to = LocalDateTime.parse(toStr, FORMATTER);
             return new RescheduleCommand(taskIndex, from, to);
         } catch (Exception e) {
-            throw new SaajidException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
+            throw new InvalidCommandException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
         }
     }
 
@@ -256,15 +259,16 @@ public class Parser {
      * @param details   The schedule details provided by the user.
      * @param taskIndex The zero-based index of the task to be rescheduled.
      * @return A {@link RescheduleCommand} with updated deadline.
-     * @throws SaajidException If parsing of date-time fails or input format is invalid.
+     * @throws InvalidCommandException If parsing of date-time fails or input format is invalid.
      */
-    private static RescheduleCommand getRescheduleDeadlineCommand(String details, int taskIndex) throws SaajidException {
+    private static RescheduleCommand getRescheduleDeadlineCommand(String details,
+                                                                  int taskIndex) throws InvalidCommandException {
         String newByStr = details.split("/by", 2)[1].trim();
         try {
             LocalDateTime newBy = LocalDateTime.parse(newByStr, FORMATTER);
             return new RescheduleCommand(taskIndex, newBy);
         } catch (Exception e) {
-            throw new SaajidException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
+            throw new InvalidCommandException("Invalid datetime format. Use yyyy-MM-dd HHmm.");
         }
     }
 }

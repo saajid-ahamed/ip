@@ -1,7 +1,7 @@
 package saajid.ui;
 
 import saajid.command.Command;
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.parser.Parser;
 import saajid.storage.Storage;
 import saajid.task.TaskList;
@@ -29,7 +29,7 @@ public class Saajid {
         TaskList loaded;
         try {
             loaded = new TaskList(storage.load());
-        } catch (SaajidException e) {
+        } catch (InvalidCommandException e) {
             ui.showError("Error loading tasks: " + e.getMessage());
             loaded = new TaskList();
         }
@@ -64,7 +64,7 @@ public class Saajid {
             command.execute(tasks, ui);
             storage.save(tasks.getTasks());
             return command.isExit();
-        } catch (SaajidException e) {
+        } catch (InvalidCommandException e) {
             ui.showError(e.getMessage());
             return false;
         }
@@ -86,7 +86,7 @@ public class Saajid {
             command.execute(tasks, stringUi);
             storage.save(tasks.getTasks());
             return stringUi.getOutput();
-        } catch (SaajidException e) {
+        } catch (InvalidCommandException e) {
             return e.getMessage();
         }
     }

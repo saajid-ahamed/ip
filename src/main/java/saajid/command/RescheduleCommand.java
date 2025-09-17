@@ -1,6 +1,6 @@
 package saajid.command;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.task.Deadline;
 import saajid.task.Event;
 import saajid.task.Task;
@@ -57,12 +57,12 @@ public class RescheduleCommand extends Command {
      *
      * @param tasks the TaskList containing the task
      * @param ui the UI to display updates
-     * @throws SaajidException if the task index is invalid or cannot be rescheduled
+     * @throws InvalidCommandException if the task index is invalid or cannot be rescheduled
      */
     @Override
-    public void execute(TaskList tasks, Ui ui) throws SaajidException {
+    public void execute(TaskList tasks, Ui ui) throws InvalidCommandException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
-            throw new SaajidException("Invalid task index. Please select a valid task.");
+            throw new InvalidCommandException("Invalid task index. Please select a valid task.");
         }
         Task task = tasks.getTask(taskIndex);
         if (task instanceof Deadline && newBy != null) {
@@ -70,7 +70,7 @@ public class RescheduleCommand extends Command {
         } else if (task instanceof Event && newFrom != null && newTo != null) {
             tasks.rescheduleTask(ui, (Event) task, newFrom, newTo);
         } else {
-            throw new SaajidException("Only Deadlines and Events can be rescheduled.");
+            throw new InvalidCommandException("Only Deadlines and Events can be rescheduled.");
         }
     }
     @Override

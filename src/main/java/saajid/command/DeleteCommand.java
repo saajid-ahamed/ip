@@ -1,6 +1,6 @@
 package saajid.command;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.storage.Storage;
 import saajid.task.TaskList;
 import saajid.ui.Ui;
@@ -27,10 +27,10 @@ public class DeleteCommand extends Command {
      *
      * @param tasks The task list to modify.
      * @param ui The UI used for displaying messages.
-     * @throws SaajidException If the index is invalid.
+     * @throws InvalidCommandException If the index is invalid.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui) throws SaajidException {
+    public void execute(TaskList tasks, Ui ui) throws InvalidCommandException {
         tasks.deleteTask(index, ui);
     }
 
