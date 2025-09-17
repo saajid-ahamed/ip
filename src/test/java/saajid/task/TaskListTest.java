@@ -3,7 +3,7 @@ package saajid.task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.ui.Ui;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ class TaskListTest {
     }
 
     @Test
-    void testDeleteTask_validIndex() throws SaajidException {
+    void testDeleteTask_validIndex() throws InvalidCommandException {
         Task t1 = new Todo("Task 1");
         taskList.addTask(t1, ui);
         Task t2 = new Todo("Task 2");
@@ -48,7 +48,7 @@ class TaskListTest {
 
     @Test
     void testDeleteTask_invalidIndex() {
-        assertThrows(SaajidException.class, () -> taskList.deleteTask(0, ui));
+        assertThrows(InvalidCommandException.class, () -> taskList.deleteTask(0, ui));
     }
 
     @Test

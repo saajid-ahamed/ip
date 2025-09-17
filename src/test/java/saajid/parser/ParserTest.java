@@ -9,7 +9,7 @@ import saajid.command.ExitCommand;
 import saajid.command.ListCommand;
 import saajid.command.MarkCommand;
 import saajid.command.UnmarkCommand;
-import saajid.exception.SaajidException;
+import saajid.exception.InvalidCommandException;
 import saajid.parser.Parser;
 import saajid.task.Deadline;
 import saajid.task.Event;
@@ -31,51 +31,51 @@ class ParserTest {
     }
 
     @Test
-    void parseExitCommand() throws SaajidException {
+    void parseExitCommand() throws InvalidCommandException {
         assertEquals(ExitCommand.class, parser.parse("bye").getClass());
         assertEquals(ExitCommand.class, parser.parse("BYE").getClass()); // case-insensitive
     }
 
     @Test
-    void parseListCommand() throws SaajidException {
+    void parseListCommand() throws InvalidCommandException {
         assertEquals(ListCommand.class, parser.parse("list").getClass());
     }
 
     @Test
-    void parseDeleteCommand_valid() throws SaajidException {
+    void parseDeleteCommand_valid() throws InvalidCommandException {
         DeleteCommand command = (DeleteCommand) parser.parse("delete 3");
         assertEquals(2, command.getIndex()); // parser uses zero-based indexing
     }
 
     @Test
     void parseDeleteCommand_missingIndex() {
-        assertThrows(SaajidException.class, () -> parser.parse("delete"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("delete"));
     }
 
     @Test
-    void parseMarkCommand_valid() throws SaajidException {
+    void parseMarkCommand_valid() throws InvalidCommandException {
         MarkCommand command = (MarkCommand) parser.parse("mark 5");
         assertEquals(4, command.getIndex());
     }
 
     @Test
     void parseMarkCommand_missingIndex() {
-        assertThrows(SaajidException.class, () -> parser.parse("mark"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("mark"));
     }
 
     @Test
-    void parseUnmarkCommand_valid() throws SaajidException {
+    void parseUnmarkCommand_valid() throws InvalidCommandException {
         UnmarkCommand command = (UnmarkCommand) parser.parse("unmark 1");
         assertEquals(0, command.getIndex());
     }
 
     @Test
     void parseUnmarkCommand_missingIndex() {
-        assertThrows(SaajidException.class, () -> parser.parse("unmark"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("unmark"));
     }
 
     @Test
-    void parseTodoCommand_valid() throws SaajidException {
+    void parseTodoCommand_valid() throws InvalidCommandException {
         AddCommand command = (AddCommand) parser.parse("todo Read book");
         assertEquals(Todo.class, command.getTask().getClass());
         assertEquals("Read book", command.getTask().getDescription());
@@ -83,12 +83,12 @@ class ParserTest {
 
     @Test
     void parseTodoCommand_missingDescription() {
-        assertThrows(SaajidException.class, () -> parser.parse("todo"));
-        assertThrows(SaajidException.class, () -> parser.parse("todo   "));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("todo"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("todo   "));
     }
 
     @Test
-    void parseDeadlineCommand_valid() throws SaajidException {
+    void parseDeadlineCommand_valid() throws InvalidCommandException {
         AddCommand command = (AddCommand) parser.parse("deadline Submit /by 2025-12-31 2359");
         assertEquals(Deadline.class, command.getTask().getClass());
         assertEquals("Submit", command.getTask().getDescription());
@@ -98,17 +98,17 @@ class ParserTest {
 
     @Test
     void parseDeadlineCommand_missingBy() {
-        assertThrows(SaajidException.class, () -> parser.parse("deadline Submit"));
-        assertThrows(SaajidException.class, () -> parser.parse("deadline Submit /bywrongformat"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("deadline Submit"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("deadline Submit /bywrongformat"));
     }
 
     @Test
     void parseDeadlineCommand_invalidDate() {
-        assertThrows(SaajidException.class, () -> parser.parse("deadline Submit /by 2025-12-31 99:99"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("deadline Submit /by 2025-12-31 99:99"));
     }
 
     @Test
-    void parseEventCommand_valid() throws SaajidException {
+    void parseEventCommand_valid() throws InvalidCommandException {
         AddCommand command = (AddCommand) parser.parse(
                 "event Party /from 2025-01-01 1800 /to 2025-01-01 2100");
         assertEquals(Event.class, command.getTask().getClass());
@@ -120,20 +120,20 @@ class ParserTest {
 
     @Test
     void parseEventCommand_missingParts() {
-        assertThrows(SaajidException.class, () -> parser.parse("event Party"));
-        assertThrows(SaajidException.class, () -> parser.parse("event Party /from 2025-01-01 1800"));
-        assertThrows(SaajidException.class, () -> parser.parse("event Party /to 2025-01-01 2100"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("event Party"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("event Party /from 2025-01-01 1800"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("event Party /to 2025-01-01 2100"));
     }
 
     @Test
     void parseEventCommand_invalidDates() {
-        assertThrows(SaajidException.class, () -> parser.parse(
+        assertThrows(InvalidCommandException.class, () -> parser.parse(
                 "event Party /from 2025-01-01 1800 /to invalid"));
     }
 
     @Test
     void parseUnknownCommand() {
-        assertThrows(SaajidException.class, () -> parser.parse("foobar"));
+        assertThrows(InvalidCommandException.class, () -> parser.parse("foobar"));
     }
 
 }

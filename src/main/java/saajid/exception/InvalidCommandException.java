@@ -6,7 +6,7 @@ package saajid.exception;
 public class InvalidCommandException  extends Exception {
 
     /**
-     * Constructs a SaajidException with the given message.
+     * Constructs a InvalidCommandException with the given message.
      *
      * @param message The error message.
      */
