@@ -46,75 +46,75 @@ productive and organized.
 ## Commands
 
 ### Add a ToDo
-```todo <description>```
+`todo <description>`
 
 **Example:**  
-```todo Read book```
+`todo Read book`
 
 ### Add a Deadline
-```deadline <description> /by <yyyy-mm-dd HHmm>```
+`deadline <description> /by <yyyy-mm-dd HHmm>`
 
 
 **Example:**  
-```deadline Submit report /by 2025-09-20 2359```
+`deadline Submit report /by 2025-09-20 2359`
 
 
 
 ### Add an Event
-```event <description> /from <yyyy-mm-dd HHmm> /to <yyyy-mm-dd HHmm>```
+`event <description> /from <yyyy-mm-dd HHmm> /to <yyyy-mm-dd HHmm>`
 
 
 **Example:**  
-```event Concert /from 2025-09-21 1400 /to 2025-09-21 1600```
+`event Concert /from 2025-09-21 1400 /to 2025-09-21 1600`
 
 
 
 ### List all Tasks
-```list```
+`list`
 
 
 
 ### Mark a Task as Done
-```mark <task index>```
+`mark <task index>`
 
 
 **Example:**  
-```mark 1```
+`mark 1`
 
 
 
 ### Unmark a Task
-```unmark <task index>```
+`unmark <task index>`
 
 **Example:**  
-```unmark 1```
+`unmark 1`
 
 ### Delete a Task
-```delete <task index>```
+`delete <task index>`
 
 **Example:**  
-```delete 2```
+`delete 2`
 
 ### Find Tasks by Description
-```find <keyword>```
+`find <keyword>`
 
 **Example:**  
-```find book```
+`find book`
 
 ### Reschedule a Deadline
-```reschedule <task index> /by <yyyy-mm-dd HHmm>```
+`reschedule <task index> /by <yyyy-mm-dd HHmm>`
 
 **Example:**  
-```reschedule 2 /by 2025-09-25 1800```
+`reschedule 2 /by 2025-09-25 1800`
 
 ### Reschedule an Event
-```reschedule <task index> /from <yyyy-mm-dd HHmm> /to <yyyy-mm-dd HHmm>```
+`reschedule <task index> /from <yyyy-mm-dd HHmm> /to <yyyy-mm-dd HHmm>`
 
 **Example:**  
-```reschedule 3 /from 2025-09-21 1500 /to 2025-09-21 1700```
+`reschedule 3 /from 2025-09-21 1500 /to 2025-09-21 1700`
 
 ### Exit the Program
-```bye```
+`bye`
 
 ---
 
@@ -124,7 +124,7 @@ productive and organized.
 1. Download the latest `.jar` version from the GitHub repository.
 2. Open a command terminal and navigate to the directory containing the `.jar` file.
 3. Run:  
-   ```java -jar saajid.jar```
+   `java -jar saajid.jar`
 4. Type commands in the command box.
 
 ---
